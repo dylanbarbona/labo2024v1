@@ -353,7 +353,7 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
   HT_tuning_guantesblancos( paste0(pnombrewf, "_HT0002"), paste0(pnombrewf, "_TS0002") )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( paste0(pnombrewf, "_ZZ0002"), c(paste0(pnombrewf, "_HT0002"), paste0(pnombrewf, "TS0002")) )
+  ZZ_final_guantesblancos( paste0(pnombrewf, "_ZZ0002"), c(paste0(pnombrewf, "_HT0002"), paste0(pnombrewf, "_TS0002")) )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
