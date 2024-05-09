@@ -204,7 +204,6 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 
   param_local$meta$script <- "/src/workflow-01/z551_TS_training_strategy.r"
 
-
   param_local$future <- c(202107)
   param_local$final_train <- c(202105, 202104, 202103, 202102, 202101, 202012, 202011, 202010, 202009)
 
@@ -342,14 +341,19 @@ corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
 corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
+  
+  DT_incorporar_dataset_default( paste0(pnombrewf, "_DT0001"), "competencia_2024.csv.gz")
+  CA_catastrophe_default( paste0(pnombrewf, "_CA0001"), paste0(pnombrewf, "_DT0001") )
+  
+  DR_drifting_guantesblancos( paste0(pnombrewf, "_DR0001"), paste0(pnombrewf, "_CA0001") )
+  FE_historia_guantesblancos( paste0(pnombrewf, "_FE0001"), paste0(pnombrewf, "_DR0001") )
 
   # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( paste0(pnombrewf, "TS0002"), paste0(pnombrewf, "FE0001") )
-
-  HT_tuning_guantesblancos( paste0(pnombrewf, "HT0002"), paste0(pnombrewf, "TS0002") )
+  TS_strategy_guantesblancos_202107( paste0(pnombrewf, "_TS0002"), paste0(pnombrewf, "_FE0001") )
+  HT_tuning_guantesblancos( paste0(pnombrewf, "_HT0002"), paste0(pnombrewf, "_TS0002") )
 
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( paste0(pnombrewf, "ZZ0002"), c(paste0(pnombrewf, "HT0002"), paste0(pnombrewf, "TS0002")) )
+  ZZ_final_guantesblancos( paste0(pnombrewf, "_ZZ0002"), c(paste0(pnombrewf, "_HT0002"), paste0(pnombrewf, "TS0002")) )
 
 
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
@@ -367,5 +371,5 @@ corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
 # Luego partiendo de  FE0001
 # genero TS0002, HT0002 y ZZ0002
 
-corrida_guantesblancos_202107( "GB02" )
+corrida_guantesblancos_202107( "E14-GB02-CV" )
 
