@@ -347,31 +347,69 @@ corrida_guantesblancos_202107 <- function(pnombrewf, pvirgen = FALSE) {
   DR_drifting_guantesblancos( paste0(pnombrewf, "_DR0001"), paste0(pnombrewf, "_CA0001") )
   FE_historia_guantesblancos( paste0(pnombrewf, "_FE0001"), paste0(pnombrewf, "_DR0001") )
   
-  initial_training <- c(202103, 202102, 202101, 202012, 202011, 202010, 202009, 202008, 202007)
-  initial_validation <- c(202103, 202102, 202101, 202012, 202011, 202010, 202009, 202008, 202007)
-  testing <- c(202105)
-  future <- c(202107)
-  final_train <- c(202105, 202104, 202103, 202102, 202101, 202012, 202011, 202010, 202009)
+  # Definir los conjuntos de datos iniciales y finales
+  train <- list(
+    c(202011, 202010, 202009, 202008, 202007),
+    c(202012, 202011, 202010, 202009, 202008, 202007),
+    c(202101, 202012, 202011, 202010, 202009, 202008, 202007),
+    c(202102, 202101, 202012, 202011, 202010, 202009, 202008, 202007),
+    c(202103, 202102, 202101, 202012, 202011, 202010, 202009, 202008, 202007)
+  )
+  val <- list(
+    c(202012),
+    c(202101),
+    c(202102),
+    c(202103),
+    c(202104)
+  )
+  tests <- list(
+    c(202101),
+    c(202102),
+    c(202103),
+    c(202104),
+    c(202105)
+  )
+  ft <- list(
+    c(202101, 202012, 202011, 202010, 202009),
+    c(202102, 202101, 202012, 202011, 202010, 202009),
+    c(202103, 202102, 202101, 202012, 202011, 202010, 202009),
+    c(202104, 202103, 202102, 202101, 202012, 202011, 202010, 202009),
+    c(202105, 202104, 202103, 202102, 202101, 202012, 202011, 202010, 202009)
+  )
+  f <- list(
+    c(202103),
+    c(202104),
+    c(202105),
+    c(202106),
+    c(202107)
+  )
   
-  for (i in (length(initial_training):2)) {
-    training <- initial_training[i:length(initial_training)]
-    validation <- initial_validation[i-1]
-    f_train <- final_train[i:length(final_train)]
+  # Iterar a través de los ciclos
+  for (i in 1:length(train)) {
+    training <- train[[i]]
+    validation <- val[[i]]
+    testing <- tests[[i]]
+    final_train <- ft[[i]]
+    future <- f[[i]]
     
     if (length(training) != length(validation)) {
-      TS_name <- paste0(pnombrewf, "_TS0002_", length(initial_training) - i+1)
-      HT_name <- paste0(pnombrewf, "_HT0002_", length(initial_training) - i+1)
-      ZZ_name <- paste0(pnombrewf, "_ZZ0002_", length(initial_training) - i+1)
+      TS_name <- paste0(pnombrewf, "_TS0002_", i)
+      HT_name <- paste0(pnombrewf, "_HT0002_", i)
+      ZZ_name <- paste0(pnombrewf, "_ZZ0002_", i)
       
-      print(paste("Meses en el ciclo", length(initial_training) - i + 1, ":"))
+      print(paste("Ciclo", i, ":"))
       print("Entrenamiento:")
       print(training)
       print("Validación: ")
       print(validation)
       print("Prueba: ")
       print(testing)
+      print("Final train: ")
+      print(final_train)
+      print("Future: ")
+      print(future)
       
-      TS_strategy_guantesblancos_202107(TS_name, paste0(pnombrewf, "_FE0001"), future, f_train, training, validation, testing)
+      TS_strategy_guantesblancos_202107(TS_name, paste0(pnombrewf, "_FE0001"), future, final_train, training, validation, testing)
       HT_tuning_guantesblancos(HT_name, TS_name)
       ZZ_final_guantesblancos(ZZ_name, c(HT_name, TS_name))
     }
@@ -393,4 +431,3 @@ corrida_guantesblancos_202107 <- function(pnombrewf, pvirgen = FALSE) {
 # genero TS0002, HT0002 y ZZ0002
 
 corrida_guantesblancos_202107( "E14-GB02-WF" )
-
